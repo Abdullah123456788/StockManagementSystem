@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">ProductManagement</string>
+    <string-array name="Load">
+        <item>Select Location</item>
+        <item>Islamabad I9</item>
+        <item>Islamabad I10</item>
+        <item>Karachi Port</item>
+        <item>Lahore</item>
+    </string-array>
+
+
+    <string-array name="Distribution">
+        <item>Imtiaz Market</item>
+        <item>Punjab Cash And Carry</item>
+        <item>City Mart</item>
+        <item>Shop I10</item>
+    </string-array>
+
+
+    <string-array name="Expense">
+        <item>Select Item</item>
+        <item>Tea</item>
+        <item>Toll Tax</item>
+        <item>Diesel</item>
+        <item>Chalan</item>
+        <item>Vehicle Maintenance</item>
+        <item>Lunch</item>
+        <item>Dinner</item>
+        <item>Breakfast</item>
+    </string-array>
+</resources>
