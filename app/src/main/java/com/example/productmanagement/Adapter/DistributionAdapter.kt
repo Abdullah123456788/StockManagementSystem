@@ -42,68 +42,41 @@ class DistributionAdapter(private val context: Context, private val list: List<I
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val currentItem = list[position]
-        val formattedTime = SimpleDateFormat(
-            "dd/MM/yyyy HH:mm",
-            Locale.getDefault()
-        ).format(Date(currentItem.timestamp))
-
-        val db = ItemsDatabase.getDatabase(context)
-        val distributionDao = db.DistributionDao()
-
-
-        GlobalScope.launch(Dispatchers.IO) {
-            val existingRecord = distributionDao.getDistributionByItem(currentItem.items)
-            val distributionQuantity = existingRecord?.distributionquantity ?: 0
-
-            launch(Dispatchers.Main) {
-                holder.distribution.text = distributionQuantity.toString()
-            }
-
-        }
-
 
         holder.itemName.text = currentItem.items
         holder.inStock.text = currentItem.quantity.toString()
+
+        holder.distribution.text = "0"
+
+        val db = ItemsDatabase.getDatabase(context)
+        val distributionDao = db.DistributionDao()
 
         holder.btnplus.setOnClickListener {
             if (currentItem.quantity > 0) {
                 currentItem.quantity--
                 holder.inStock.text = currentItem.quantity.toString()
 
-                val activity = context as? Distribution
-                val selectedLocation = activity?.locationSpinner?.selectedItem?.toString() ?: "Default Location"
-
                 val newDistributionQuantity = holder.distribution.text.toString().toInt() + 1
                 holder.distribution.text = newDistributionQuantity.toString()
 
+                val activity = context as? Distribution
+                val selectedLocation = activity?.locationSpinner?.selectedItem?.toString() ?: "Default Location"
                 val newTimestamp = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()).format(Date())
 
+
                 GlobalScope.launch(Dispatchers.IO) {
-                    val existingRecord = distributionDao.getDistributionByItem(currentItem.items)
-
-                    if (existingRecord == null) {
-                        val newRecord = DistributeRecordItems(
-                            item = currentItem.items,
-                            timestamp = newTimestamp,
-                            distributionquantity = newDistributionQuantity,
-                            location = selectedLocation
-                        )
-                        distributionDao.insertDistribution(newRecord)
-                    } else {
-                        distributionDao.updateDistributionQuantity(currentItem.items, newDistributionQuantity, newTimestamp, selectedLocation)
-                    }
-
-                    launch(Dispatchers.Main) {
-                        list.toMutableList().removeAt(position)
-                        notifyDataSetChanged()
-                    }
+                    val newRecord = DistributeRecordItems(
+                        item = currentItem.items,
+                        timestamp = newTimestamp,
+                        distributionquantity = newDistributionQuantity,
+                        location = selectedLocation
+                    )
+                    distributionDao.insertDistribution(newRecord)
                 }
             } else {
                 Toast.makeText(holder.itemView.context, "No items in stock", Toast.LENGTH_SHORT).show()
             }
         }
-
-
 
         holder.btnminus.setOnClickListener {
             val distributionCount = holder.distribution.text.toString().toInt()
@@ -129,7 +102,6 @@ class DistributionAdapter(private val context: Context, private val list: List<I
                 }
             }
         }
-
     }
     }
 

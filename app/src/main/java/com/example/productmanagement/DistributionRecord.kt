@@ -18,6 +18,7 @@ class DistributionRecord : AppCompatActivity() {
     private lateinit var adapter: DistributionRecordAdapter
     private var recordList: MutableList<DistributeRecordItems> = mutableListOf()
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_distribution_record)

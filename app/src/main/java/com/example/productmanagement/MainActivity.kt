@@ -17,6 +17,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var receipt:Button
     private lateinit var storage:Button
     private lateinit var distributiondb:Button
+    private lateinit var sync:Button
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,6 +31,7 @@ class MainActivity : AppCompatActivity() {
         receipt=findViewById(R.id.Reciept)
         storage=findViewById(R.id.Storage)
         distributiondb=findViewById(R.id.distributionrecord)
+        sync=findViewById(R.id.Sync)
 
 
 
@@ -57,6 +59,9 @@ class MainActivity : AppCompatActivity() {
         distributiondb.setOnClickListener{
             val intent=Intent(this,DistributionRecord::class.java)
             startActivity(intent)
+        }
+        sync.setOnClickListener{
+
         }
     }
 }
