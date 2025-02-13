@@ -101,6 +101,7 @@ class Expense : AppCompatActivity() {
                         expenseAdapter.notifyDataSetChanged()
                         totalExpense.text = "0"
                         Toast.makeText(this@Expense, "Expenses saved successfully!", Toast.LENGTH_SHORT).show()
+                        finish()
                     }
                 }
             } else {

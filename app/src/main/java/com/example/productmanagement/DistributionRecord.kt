@@ -42,7 +42,7 @@ class DistributionRecord : AppCompatActivity() {
             withContext(Dispatchers.Main) {
                 recordList.clear()
                 recordList.addAll(allDistributions)
-                adapter.notifyDataSetChanged() // Notify adapter about data changes
+                adapter.notifyDataSetChanged()
             }
         }
     }

@@ -1,6 +1,5 @@
 package com.example.productmanagement
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
 import android.widget.AdapterView
@@ -15,9 +14,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.productmanagement.Adapter.DistributionAdapter
 import com.example.productmanagement.Model.DistributeRecordItems
-import com.example.productmanagement.Model.Distributionitem
 import com.example.productmanagement.Model.Item
 import com.example.productmanagement.Model.ItemsDatabase
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -73,8 +72,7 @@ class Distribution : AppCompatActivity() {
         }
 
         saveButton.setOnClickListener {
-            updateItemsInDatabase()
-            finish()
+            saveDistributionRecords()
         }
 
         updateTimeAndDate()
@@ -92,14 +90,34 @@ class Distribution : AppCompatActivity() {
         }
     }
 
-    private fun updateItemsInDatabase() {
-        lifecycleScope.launch {
-            val itemsDao = ItemsDatabase.getDatabase(applicationContext).itemsDao()
-            for (item in itemList) {
-                itemsDao.updateItem(item)
+    private fun saveDistributionRecords() {
+        val updatedRecords = distributionAdapter.getDistributionRecords()
+        val db = ItemsDatabase.getDatabase(applicationContext)
+        val itemsDao = db.itemsDao()
+        val distributionDao = db.DistributionDao()
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            updatedRecords.forEach { item ->
+                if (item.distributionQuantity > 0) {
+                    val newTimestamp = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()).format(Calendar.getInstance().time)
+
+                    val distributionRecord = DistributeRecordItems(
+                        item = item.items,
+                        timestamp = newTimestamp,
+                        distributionquantity = item.distributionQuantity,
+                        location = selectedLocation
+                    )
+
+                    distributionDao.insertDistribution(distributionRecord)
+                    itemsDao.updateItem(item)
+                    finish()
+                }
             }
-            Toast.makeText(applicationContext, "Items and Distribution records saved!", Toast.LENGTH_SHORT).show()
-            loadItemsFromDatabase()
+
+            runOnUiThread {
+                Toast.makeText(applicationContext, "Items and Distribution records saved!", Toast.LENGTH_SHORT).show()
+                loadItemsFromDatabase()
+            }
         }
     }
 

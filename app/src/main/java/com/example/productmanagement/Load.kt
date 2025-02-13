@@ -152,25 +152,25 @@ class Load : AppCompatActivity() {
                 itemList.clear()
                 val newItems = when (selectedItem) {
                     "Islamabad I9" -> mutableListOf(
-                        Item(items = "Pepsi", quantity = 0, timestamp = 0),
-                        Item(items = "Coke", quantity = 0, timestamp = 0),
-                        Item(items = "Juice", quantity = 0, timestamp = 0),
-                        Item(items = "Milk", quantity = 0, timestamp = 0),
+                        Item(items = "Pepsi", distributionQuantity = 0, quantity = 0, timestamp = 0),
+                        Item(items = "Coke", distributionQuantity = 0,quantity = 0, timestamp = 0),
+                        Item(items = "Juice",distributionQuantity = 0, quantity = 0, timestamp = 0),
+                        Item(items = "Milk", distributionQuantity = 0,quantity = 0, timestamp = 0),
                     )
                     "Islamabad I10" -> mutableListOf(
-                        Item(items = "Flour", quantity = 0, timestamp = 0),
-                        Item(items = "Rice", quantity = 0, timestamp = 0),
-                        Item(items = "Beans", quantity = 0, timestamp = 0)
+                        Item(items = "Flour",distributionQuantity = 0, quantity = 0, timestamp = 0),
+                        Item(items = "Rice",distributionQuantity = 0, quantity = 0, timestamp = 0),
+                        Item(items = "Beans",distributionQuantity = 0, quantity = 0, timestamp = 0)
                     )
                     "Karachi Port" -> mutableListOf(
-                        Item(items = "Mobiles", quantity = 0, timestamp = 0),
-                        Item(items = "LCD", quantity = 0, timestamp = 0),
-                        Item(items = "Imported Shirts", quantity = 0, timestamp = 0)
+                        Item(items = "Mobiles", distributionQuantity = 0,quantity = 0, timestamp = 0),
+                        Item(items = "LCD", distributionQuantity = 0,quantity = 0, timestamp = 0),
+                        Item(items = "Imported Shirts",distributionQuantity = 0, quantity = 0, timestamp = 0)
                     )
                     "Lahore" -> mutableListOf(
-                        Item(items = "Clothes", quantity = 0),
-                        Item(items = "Shorts", quantity = 0),
-                        Item(items = "Pants", quantity = 0)
+                        Item(items = "Clothes", distributionQuantity = 0,quantity = 0),
+                        Item(items = "Shorts",distributionQuantity = 0, quantity = 0),
+                        Item(items = "Pants", distributionQuantity = 0,quantity = 0)
                     )
                     else -> emptyList()
                 }

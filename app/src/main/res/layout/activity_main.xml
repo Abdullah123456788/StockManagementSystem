@@ -63,7 +63,7 @@
 
     <Button
         android:id="@+id/Reciept"
-        android:text="Reciept"
+        android:text="Reciept For Expanse"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -78,7 +78,7 @@
 
     <Button
         android:id="@+id/Storage"
-        android:text="All Items"
+        android:text="All Load Items"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -95,7 +95,7 @@
 
     <Button
         android:id="@+id/distributionrecord"
-        android:text="Distribution Records"
+        android:text="Distributed Items"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"

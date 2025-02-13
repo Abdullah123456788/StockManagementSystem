@@ -1,33 +1,25 @@
 package com.example.productmanagement.Adapter
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import com.example.productmanagement.Distribution
-import com.example.productmanagement.Model.DistributeRecordItems
 import com.example.productmanagement.Model.Item
-import com.example.productmanagement.Model.ItemsDatabase
 import com.example.productmanagement.R
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
-class DistributionAdapter(private val context: Context, private val list: List<Item>) :
+class DistributionAdapter(private val context: Context, private val itemList: MutableList<Item>) :
     RecyclerView.Adapter<DistributionAdapter.ViewHolder>() {
+
+    // Store distribution quantities separately to save on the "Save" button
+    private val distributionMap = mutableMapOf<Int, Int>()
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val itemName: TextView = view.findViewById(R.id.itemname)
-        val btnplus: Button = view.findViewById(R.id.plus)
-        val btnminus: Button = view.findViewById(R.id.minus)
+        val btnPlus: Button = view.findViewById(R.id.plus)
+        val btnMinus: Button = view.findViewById(R.id.minus)
         val inStock: TextView = view.findViewById(R.id.instock)
         val distribution: TextView = view.findViewById(R.id.itemcalculate)
     }
@@ -38,70 +30,45 @@ class DistributionAdapter(private val context: Context, private val list: List<I
         )
     }
 
-    override fun getItemCount(): Int = list.size
+    override fun getItemCount(): Int = itemList.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val currentItem = list[position]
+        val currentItem = itemList[position]
 
         holder.itemName.text = currentItem.items
         holder.inStock.text = currentItem.quantity.toString()
-
         holder.distribution.text = "0"
 
-        val db = ItemsDatabase.getDatabase(context)
-        val distributionDao = db.DistributionDao()
+        if (!distributionMap.containsKey(position)) {
+            distributionMap[position] = 0
+        }
 
-        holder.btnplus.setOnClickListener {
+        holder.btnPlus.setOnClickListener {
             if (currentItem.quantity > 0) {
                 currentItem.quantity--
                 holder.inStock.text = currentItem.quantity.toString()
 
-                val newDistributionQuantity = holder.distribution.text.toString().toInt() + 1
+                val newDistributionQuantity = (distributionMap[position] ?: 0) + 1
+                distributionMap[position] = newDistributionQuantity
                 holder.distribution.text = newDistributionQuantity.toString()
-
-                val activity = context as? Distribution
-                val selectedLocation = activity?.locationSpinner?.selectedItem?.toString() ?: "Default Location"
-                val newTimestamp = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()).format(Date())
-
-
-                GlobalScope.launch(Dispatchers.IO) {
-                    val newRecord = DistributeRecordItems(
-                        item = currentItem.items,
-                        timestamp = newTimestamp,
-                        distributionquantity = newDistributionQuantity,
-                        location = selectedLocation
-                    )
-                    distributionDao.insertDistribution(newRecord)
-                }
-            } else {
-                Toast.makeText(holder.itemView.context, "No items in stock", Toast.LENGTH_SHORT).show()
             }
         }
 
-        holder.btnminus.setOnClickListener {
-            val distributionCount = holder.distribution.text.toString().toInt()
-
-            if (distributionCount > 0) {
+        holder.btnMinus.setOnClickListener {
+            if ((distributionMap[position] ?: 0) > 0) {
                 currentItem.quantity++
                 holder.inStock.text = currentItem.quantity.toString()
 
-                val newDistributionQuantity = distributionCount - 1
+                val newDistributionQuantity = (distributionMap[position] ?: 0) - 1
+                distributionMap[position] = newDistributionQuantity
                 holder.distribution.text = newDistributionQuantity.toString()
-
-                val activity = context as? Distribution
-                val selectedLocation = activity?.locationSpinner?.selectedItem?.toString() ?: "Default Location"
-                val newTimestamp = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()).format(Date())
-
-                GlobalScope.launch(Dispatchers.IO) {
-                    distributionDao.updateDistributionQuantity(
-                        currentItem.items,
-                        newDistributionQuantity,
-                        newTimestamp,
-                        selectedLocation
-                    )
-                }
             }
         }
     }
-    }
 
+    fun getDistributionRecords(): List<Item> {
+        return itemList.mapIndexed { index, item ->
+            item.copy(quantity = item.quantity, distributionQuantity = distributionMap[index] ?: 0)
+        }
+    }
+}

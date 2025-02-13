@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "481162272512",
+    "project_id": "stockmanagementsystem-dfca0",
+    "storage_bucket": "stockmanagementsystem-dfca0.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:481162272512:android:dbaee558ca39ea19881de5",
+        "android_client_info": {
+          "package_name": "com.example.productmanagement"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3kgCCNWvFOAKb83X8x7iNa57R6nRDFVs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

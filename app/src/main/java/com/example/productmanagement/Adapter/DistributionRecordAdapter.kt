@@ -31,7 +31,7 @@ class DistributionRecordAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val record = list[position]
-        holder.distributionTime.text = record.timestamp.toString() // Convert timestamp properly if needed
+        holder.distributionTime.text = record.timestamp.toString()
         holder.itemName.text = record.item
         holder.quantity.text = record.distributionquantity.toString()
         holder.location.text = record.location
