@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.productmanagement.Adapter.ItemsAdapter
 import com.example.productmanagement.Model.Item
 import com.example.productmanagement.Model.ItemsDatabase
+import com.example.productmanagement.Model.Stock
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -26,6 +27,7 @@ class Load : AppCompatActivity() {
     private lateinit var editText: EditText
     private lateinit var recyclerView: RecyclerView
     private lateinit var itemsAdapter: ItemsAdapter
+    private var selectedlocation :String =""
     private lateinit var itemList: MutableList<Item>
 
     @SuppressLint("MissingInflatedId")
@@ -43,7 +45,8 @@ class Load : AppCompatActivity() {
         editText = findViewById(R.id.edittotalquantity)
         recyclerView = findViewById(R.id.recyclerview)
 
-        itemList = mutableListOf()
+
+            itemList = mutableListOf()
 
         recyclerView.layoutManager = LinearLayoutManager(this)
         itemsAdapter = ItemsAdapter(itemList, useStorageLayout = false) {
@@ -55,6 +58,7 @@ class Load : AppCompatActivity() {
             saveItemsToDatabase()
             finish()
         }
+
 
         db.setOnClickListener {
             loadItemsFromDatabase()
@@ -72,23 +76,40 @@ class Load : AppCompatActivity() {
     private fun saveItemsToDatabase() {
         lifecycleScope.launch {
             val dao = ItemsDatabase.getDatabase(applicationContext).itemsDao()
+            val stockDao = ItemsDatabase.getDatabase(applicationContext).stockDao()
             val savedItems = mutableListOf<Item>()
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+
+            selectedlocation = spinner.selectedItem?.toString() ?: ""
 
             for (item in itemList) {
                 val quantity = item.quantity ?: 0
 
                 if (quantity > 0) {
+                    val formattedTime = dateFormat.format(Date(System.currentTimeMillis()))
                     val existingItem = dao.getItemByName(item.items)
 
                     if (existingItem != null) {
                         existingItem.quantity += quantity
                         existingItem.timestamp = System.currentTimeMillis()
                         dao.updateItem(existingItem)
+
+                        stockDao.updateStockItem(existingItem.items, quantity, existingItem.timestamp.toString())
+
                         savedItems.add(existingItem)
                     } else {
                         item.timestamp = System.currentTimeMillis()
                         item.quantity = quantity
                         dao.insertItem(item)
+
+                        val stock = Stock(
+                            item = item.items,
+                            quantity = item.quantity,
+                            location = selectedlocation,
+                            timestamp = formattedTime
+                        )
+                        stockDao.insertStock(stock)
+
                         savedItems.add(item)
                     }
                 }
@@ -103,6 +124,7 @@ class Load : AppCompatActivity() {
             updateTotalQuantity()
         }
     }
+
 
 
 

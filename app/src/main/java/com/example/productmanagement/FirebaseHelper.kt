@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.productmanagement.Model.DistributeRecordItems
 import com.example.productmanagement.Model.Item
 import com.example.productmanagement.Model.ExpenseItem
+import com.example.productmanagement.Model.Stock
 import com.google.firebase.firestore.FirebaseFirestore
 
 class FirebaseHelper {
@@ -32,13 +33,32 @@ class FirebaseHelper {
         val batch = firestore.batch()
 
         itemsList.forEach { item ->
-            val docRef = firestore.collection("items").document(item.id.toString())
+            val docRef = firestore.collection("Stock").document(item.id.toString())
             batch.set(docRef, item)
         }
 
         batch.commit()
             .addOnSuccessListener {
                 Log.d("FirebaseHelper", "Items uploaded successfully")
+                callback(true)
+            }
+            .addOnFailureListener { e ->
+                Log.e("FirebaseHelper", "Error uploading items", e)
+                callback(false)
+            }
+    }
+
+    fun uploadStocktodatabase(itemsList: List<Stock>, callback: (Boolean) -> Unit) {
+        val batch = firestore.batch()
+
+        itemsList.forEach { item ->
+            val docRef = firestore.collection("Load").document(item.id.toString())
+            batch.set(docRef, item)
+        }
+
+        batch.commit()
+            .addOnSuccessListener {
+                Log.d("FirebaseHelper", "Stocks uploaded successfully")
                 callback(true)
             }
             .addOnFailureListener { e ->

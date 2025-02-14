@@ -18,6 +18,8 @@ import com.example.productmanagement.Model.ExpenseItem
 import com.example.productmanagement.Model.Item
 import com.example.productmanagement.Model.ItemsDao
 import com.example.productmanagement.Model.ItemsDatabase
+import com.example.productmanagement.Model.Stock
+import com.example.productmanagement.Model.StockDao
 import com.google.firebase.FirebaseApp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -36,6 +38,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var distributionDao: DistributionDao
     private lateinit var itemdao: ItemsDao
     private lateinit var expensedao: ExpenseDao
+    private lateinit var stockdao: StockDao
     private lateinit var firebaseHelper: FirebaseHelper
 
 
@@ -44,7 +47,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        supportActionBar?.title = "Home"
+        supportActionBar?.hide()
 
         load=findViewById(R.id.load)
         distribution=findViewById(R.id.distribution)
@@ -58,6 +61,7 @@ class MainActivity : AppCompatActivity() {
         distributionDao = database.DistributionDao()
         itemdao = database.itemsDao()
         expensedao = database2.expenseDao()
+        stockdao = database.stockDao()
         distributionDao = database.DistributionDao()
         firebaseHelper = FirebaseHelper()
         FirebaseApp.initializeApp(this)
@@ -99,39 +103,46 @@ class MainActivity : AppCompatActivity() {
                 val distributionList: List<DistributeRecordItems> = distributionDao.getAllDistributions()
                 val itemsList: List<Item> = itemdao.getAllItems()
                 val expenseList: List<ExpenseItem> = expensedao.getAllExpenses()
+                val stockList: List<Stock> = stockdao.getAllStock()
 
                 withContext(Dispatchers.Main) {
                     if (distributionList.isNotEmpty()) {
                         firebaseHelper.uploadDistributionsToFirebase(distributionList) { success ->
-                            if (success) {
-                                Toast.makeText(applicationContext, "Distributions synced!", Toast.LENGTH_SHORT).show()
-                            } else {
-                                Toast.makeText(applicationContext, "Distributions sync failed!", Toast.LENGTH_SHORT).show()
-                            }
+                            Toast.makeText(applicationContext,
+                                if (success) "Distributions synced!" else "Distributions sync failed!",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     }
 
                     if (itemsList.isNotEmpty()) {
                         firebaseHelper.uploadItemsToFirebase(itemsList) { success ->
-                            if (success) {
-                                Toast.makeText(applicationContext, "Items synced!", Toast.LENGTH_SHORT).show()
-                            } else {
-                                Toast.makeText(applicationContext, "Items sync failed!", Toast.LENGTH_SHORT).show()
-                            }
+                            Toast.makeText(applicationContext,
+                                if (success) "Items synced!" else "Items sync failed!",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     }
 
                     if (expenseList.isNotEmpty()) {
                         firebaseHelper.uploadExpensesToFirebase(expenseList) { success ->
-                            if (success) {
-                                Toast.makeText(applicationContext, "Expenses synced!", Toast.LENGTH_SHORT).show()
-                            } else {
-                                Toast.makeText(applicationContext, "Expenses sync failed!", Toast.LENGTH_SHORT).show()
-                            }
+                            Toast.makeText(applicationContext,
+                                if (success) "Expenses synced!" else "Expenses sync failed!",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     }
 
-                    if (distributionList.isEmpty() && itemsList.isEmpty() && expenseList.isEmpty()) {
+                    if (stockList.isNotEmpty()) {
+                        firebaseHelper.uploadStocktodatabase(stockList) { success ->
+                            Toast.makeText(applicationContext,
+                                if (success) "Stock synced!" else "Stock sync failed!",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+
+                    if (distributionList.isEmpty() && itemsList.isEmpty() && expenseList.isEmpty() && stockList.isEmpty()) {
                         Toast.makeText(applicationContext, "No data to sync!", Toast.LENGTH_SHORT).show()
                     }
                 }
@@ -142,5 +153,5 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-}
+    }
 }

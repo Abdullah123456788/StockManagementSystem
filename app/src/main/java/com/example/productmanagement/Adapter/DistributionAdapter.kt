@@ -13,7 +13,6 @@ import com.example.productmanagement.R
 class DistributionAdapter(private val context: Context, private val itemList: MutableList<Item>) :
     RecyclerView.Adapter<DistributionAdapter.ViewHolder>() {
 
-    // Store distribution quantities separately to save on the "Save" button
     private val distributionMap = mutableMapOf<Int, Int>()
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
