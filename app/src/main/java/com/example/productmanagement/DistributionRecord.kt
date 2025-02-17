@@ -22,7 +22,7 @@ class DistributionRecord : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_distribution_record)
-        supportActionBar?.title = "Distribute Items"
+        supportActionBar?.title = "Distribute Items List"
 
         recyclerView = findViewById(R.id.distributerecyclerview)
         recyclerView.layoutManager = LinearLayoutManager(this)

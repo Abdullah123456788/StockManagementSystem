@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
+import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -59,6 +60,7 @@ class Load : AppCompatActivity() {
             finish()
         }
 
+        db.visibility =View.GONE
 
         db.setOnClickListener {
             loadItemsFromDatabase()

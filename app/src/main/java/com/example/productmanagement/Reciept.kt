@@ -24,7 +24,7 @@ class Reciept : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_reciept)
-        supportActionBar?.title = "Receipt"
+        supportActionBar?.title = "Receipt For All Expanses"
 
         recyclerView = findViewById(R.id.receipt_recyclerView)
         totalExpenseText = findViewById(R.id.total_expense_receipt)

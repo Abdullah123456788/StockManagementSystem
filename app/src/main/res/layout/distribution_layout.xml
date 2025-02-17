@@ -41,8 +41,8 @@
         tools:ignore="MissingConstraints" />
     <Button
         android:id="@+id/plus"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="34dp"
+        android:layout_height="30dp"
         android:layout_marginEnd="50dp"
         android:background="@drawable/addbtn"
         app:layout_constraintTop_toTopOf="@+id/minus"

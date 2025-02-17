@@ -39,7 +39,7 @@ class Storage : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_storage)
-        supportActionBar?.title = "All Items In Database"
+        supportActionBar?.title = "All Loaded Items"
 
         recyclerView = findViewById(R.id.storagerecyclerview)
         tableLayout = findViewById(R.id.tableLayout)
