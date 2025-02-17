@@ -12,8 +12,6 @@
     <ImageView
         android:layout_width="120dp"
         android:layout_height="100dp"
-        android:layout_marginTop="20dp"
-        android:scaleType="fitXY"
         tools:ignore="MissingConstraints"
         android:background="@drawable/logo"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,26 +21,26 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/container"
-        android:layout_width="0dp"
+        android:layout_width="370dp"
         android:layout_height="420dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/Sync"
         app:layout_constraintStart_toStartOf="@+id/Sync"
-        android:layout_marginTop="160dp"
+        android:layout_marginTop="170dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:background="@drawable/container"
         app:layout_constraintBottom_toBottomOf="@+id/distributionrecord"/>
     <Button
         android:id="@+id/load"
-        android:text="●   Load"
+        android:text="Load"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:background="@drawable/btn_design"
         android:textColor="@color/black"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="@+id/container"
         app:layout_constraintStart_toStartOf="@+id/container"
         app:layout_constraintTop_toTopOf="@+id/container"
@@ -50,7 +48,7 @@
 
     <Button
         android:id="@+id/distribution"
-        android:text="●   Start Distribution"
+        android:text="Start Distribution"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -65,7 +63,7 @@
 
     <Button
         android:id="@+id/expanse"
-        android:text="● Expanse"
+        android:text="Expanse"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -80,7 +78,7 @@
 
     <Button
         android:id="@+id/Reciept"
-        android:text="●   Reciept For Expanse"
+        android:text="Reciept For Expanse"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -95,7 +93,7 @@
 
     <Button
         android:id="@+id/Storage"
-        android:text="●   All Load Items"
+        android:text="All Load Items"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -112,7 +110,7 @@
 
     <Button
         android:id="@+id/distributionrecord"
-        android:text="●   Distributed Items"
+        android:text="Distributed Items"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
