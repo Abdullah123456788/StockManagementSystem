@@ -10,10 +10,13 @@
     android:background="@color/LightGray"
     >
     <ImageView
+        android:id="@+id/logo"
         android:layout_width="120dp"
-        android:layout_height="100dp"
-        tools:ignore="MissingConstraints"
-        android:background="@drawable/logo"
+        android:layout_height="120dp"
+        android:src="@drawable/logo"
+        android:scaleType="centerCrop"
+        android:background="@drawable/icon_image"
+        android:clipToOutline="true"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"

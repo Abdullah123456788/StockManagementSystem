@@ -1,10 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item>
-        <shape android:shape="oval">
-            <solid android:color="@color/white" />
-            <size android:width="10dp" android:height="3dp"/>
-        </shape>
-    </item>
-    <item android:drawable="@drawable/logo" android:gravity="center"/>
-</layer-list>
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="oval">
+    <solid android:color="@android:color/white"/>
+</shape>
