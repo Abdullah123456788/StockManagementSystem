@@ -6,7 +6,6 @@
     android:layout_marginTop="6dp"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
     <TextView
         android:id="@+id/distributionTime"
         android:layout_width="wrap_content"
@@ -18,7 +17,6 @@
         app:layout_constraintEnd_toStartOf="@+id/Location"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:ignore="MissingConstraints" />
-
     <TextView
         android:id="@+id/Location"
         android:layout_width="60dp"
@@ -38,12 +36,10 @@
         android:text="Item"
         android:textStyle="bold"
         android:layout_marginLeft="20dp"
-
         app:layout_constraintStart_toEndOf="@id/Location"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/distributeitemqunatity"
         />
-
     <TextView
         android:id="@+id/distributeitemqunatity"
         android:layout_width="0dp"
@@ -51,7 +47,6 @@
         android:text="Quantity"
         android:textStyle="bold"
         android:layout_marginLeft="20dp"
-
         app:layout_constraintStart_toEndOf="@+id/distributeitem"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"

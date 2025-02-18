@@ -20,7 +20,7 @@ interface DistributionDao {
     fun updateDistribution(record: DistributeRecordItems)
     @Query("SELECT * FROM distribute WHERE item = :itemName LIMIT 1")
     fun getItemByName(itemName: String): DistributeRecordItems?
-    @Query("SELECT * FROM distribute")
+    @Query("SELECT * FROM distribute ORDER BY timestamp DESC")
     fun getAllDistributions(): List<DistributeRecordItems>
 
 }

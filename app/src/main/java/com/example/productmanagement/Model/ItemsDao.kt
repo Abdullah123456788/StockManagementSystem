@@ -1,8 +1,7 @@
 package com.example.productmanagement.Model
 
 import androidx.room.*
-import java.sql.Time
-import java.sql.Timestamp
+
 
 @Dao
 interface ItemsDao {
