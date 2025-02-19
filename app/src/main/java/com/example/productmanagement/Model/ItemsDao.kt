@@ -11,11 +11,12 @@ interface ItemsDao {
     @Update
     suspend fun updateItem(item: Item)
 
-    @Query("SELECT * FROM items WHERE items = :itemName LIMIT 1 ")
-    suspend fun getItemByName(itemName: String): Item?
 
-    @Query("SELECT * FROM items ORDER BY timestamp DESC")
-    suspend fun getAllItems(): List<Item>
+    @Query("SELECT * FROM items WHERE items = :itemName AND userId = :userId LIMIT 1")
+    suspend fun getItemByName(itemName: String,userId: String): Item?
+
+    @Query("SELECT * FROM items WHERE userId = :userId ORDER BY timestamp DESC")
+    suspend fun getAllItems(userId: String): List<Item>
 
 }
 

@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.productmanagement.Adapter.DistributionRecordAdapter
 import com.example.productmanagement.Model.DistributeRecordItems
 import com.example.productmanagement.Model.ItemsDatabase
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -34,8 +35,9 @@ class DistributionRecord : AppCompatActivity() {
 
     private fun loadItemsFromDatabase() {
         lifecycleScope.launch(Dispatchers.IO) {
+            val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
             val dao = ItemsDatabase.getDatabase(applicationContext).DistributionDao()
-            val allDistributions = dao.getAllDistributions()
+            val allDistributions = dao.getAllDistributions(userId)
 
             Log.d("Distribution Record", "Loaded items: $allDistributions")
 

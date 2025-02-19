@@ -54,6 +54,7 @@ dependencies {
     implementation ("com.google.code.gson:gson:2.10.1")
     implementation ("androidx.room:room-runtime:$roomVersion")
     implementation ("androidx.room:room-ktx:$roomVersion")
+    implementation ("com.google.firebase:firebase-auth:22.3.1")
     implementation ("com.google.firebase:firebase-database:20.2.1")
     ksp("androidx.room:room-compiler:$roomVersion")
 }

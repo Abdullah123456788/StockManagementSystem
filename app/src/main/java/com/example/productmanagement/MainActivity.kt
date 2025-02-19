@@ -21,18 +21,21 @@ import com.example.productmanagement.Model.ItemsDatabase
 import com.example.productmanagement.Model.Stock
 import com.example.productmanagement.Model.StockDao
 import com.google.firebase.FirebaseApp
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity() {
     private lateinit var load:Button
+    private lateinit var auth: FirebaseAuth
     private lateinit var distribution:Button
     private lateinit var expense:Button
     private lateinit var receipt:Button
     private lateinit var storage:Button
     private lateinit var distributiondb:Button
     private lateinit var sync:Button
+    private lateinit var logout:Button
     private lateinit var database: ItemsDatabase
     private lateinit var database2: ExpenseDatabase
     private lateinit var distributionDao: DistributionDao
@@ -40,6 +43,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var expensedao: ExpenseDao
     private lateinit var stockdao: StockDao
     private lateinit var firebaseHelper: FirebaseHelper
+
 
 
 
@@ -56,6 +60,7 @@ class MainActivity : AppCompatActivity() {
         storage=findViewById(R.id.Storage)
         distributiondb=findViewById(R.id.distributionrecord)
         sync=findViewById(R.id.Sync)
+        logout=findViewById(R.id.logout)
         database = ItemsDatabase.getDatabase(applicationContext)
         database2 = ExpenseDatabase.getDatabase(applicationContext)
         distributionDao = database.DistributionDao()
@@ -64,13 +69,24 @@ class MainActivity : AppCompatActivity() {
         stockdao = database.stockDao()
         distributionDao = database.DistributionDao()
         firebaseHelper = FirebaseHelper()
+        auth = FirebaseAuth.getInstance()
         FirebaseApp.initializeApp(this)
 
+
+        if (auth.currentUser == null) {
+            navigateToLogin()
+            return
+        }
 
         load.setOnClickListener{
             val intent=Intent(this,Load::class.java)
             startActivity(intent)
         }
+        logout.setOnClickListener {
+            auth.signOut()
+            navigateToLogin()
+        }
+
 
         distribution.setOnClickListener{
             val intent=Intent(this,Distribution::class.java)
@@ -100,9 +116,10 @@ class MainActivity : AppCompatActivity() {
     private fun syncDataToFirebase() {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                val distributionList: List<DistributeRecordItems> = distributionDao.getAllDistributions()
-                val itemsList: List<Item> = itemdao.getAllItems()
-                val expenseList: List<ExpenseItem> = expensedao.getAllExpenses()
+                val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+                val distributionList: List<DistributeRecordItems> = distributionDao.getAllDistributions(userId)
+                val itemsList: List<Item> = itemdao.getAllItems(userId)
+                val expenseList: List<ExpenseItem> = expensedao.getAllExpenses(userId)
                 val stockList: List<Stock> = stockdao.getAllStock()
 
                 withContext(Dispatchers.Main) {
@@ -153,5 +170,12 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun navigateToLogin() {
+        val intent = Intent(this, Login::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
+        finish()
     }
 }

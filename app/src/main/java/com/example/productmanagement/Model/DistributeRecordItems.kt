@@ -10,5 +10,6 @@ data class DistributeRecordItems(
     var item: String,
     var distributionquantity: Int,
     var location:String,
-    val timestamp: String
+    val timestamp: String,
+    val userId: String
 )

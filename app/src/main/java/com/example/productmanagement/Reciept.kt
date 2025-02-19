@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.productmanagement.Adapter.ExpenseAdapter
 import com.example.productmanagement.Model.ExpenseDatabase
 import com.example.productmanagement.Model.ExpenseItem
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -40,7 +41,9 @@ class Reciept : AppCompatActivity() {
 
     private fun loadExpenses() {
         lifecycleScope.launch(Dispatchers.IO) {
-            val expenses = database.expenseDao().getAllExpenses()
+            val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+
+            val expenses = database.expenseDao().getAllExpenses(userId)
             withContext(Dispatchers.Main) {
                 if (expenses.isNotEmpty()) {
                     expenseList.clear()

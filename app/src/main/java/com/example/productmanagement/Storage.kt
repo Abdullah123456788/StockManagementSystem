@@ -15,6 +15,7 @@ import com.example.productmanagement.Adapter.ItemsAdapter
 import com.example.productmanagement.Model.Item
 import com.example.productmanagement.Model.ItemsDao
 import com.example.productmanagement.Model.ItemsDatabase
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -70,7 +71,9 @@ class Storage : AppCompatActivity() {
 
     private fun loadItemsFromDatabase() {
         lifecycleScope.launch(Dispatchers.IO) {
-            val itemsList = itemsDao.getAllItems() as MutableList
+            val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+
+            val itemsList = itemsDao.getAllItems(userId) as MutableList
             withContext(Dispatchers.Main) {
                 itemsAdapter.updateData(itemsList)
                 addItemsToTable(itemsList)

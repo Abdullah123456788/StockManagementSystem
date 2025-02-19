@@ -16,6 +16,7 @@ import com.example.productmanagement.Adapter.DistributionAdapter
 import com.example.productmanagement.Model.DistributeRecordItems
 import com.example.productmanagement.Model.Item
 import com.example.productmanagement.Model.ItemsDatabase
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -80,8 +81,10 @@ class Distribution : AppCompatActivity() {
 
     private fun loadItemsFromDatabase() {
         lifecycleScope.launch {
+            val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+
             val dao = ItemsDatabase.getDatabase(applicationContext).itemsDao()
-            val allItems = dao.getAllItems()
+            val allItems = dao.getAllItems(userId)
 
             itemList.clear()
             itemList.addAll(allItems)
@@ -100,12 +103,13 @@ class Distribution : AppCompatActivity() {
             updatedRecords.forEach { item ->
                 if (item.distributionQuantity > 0) {
                     val newTimestamp = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()).format(Calendar.getInstance().time)
-
+                    val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
                     val distributionRecord = DistributeRecordItems(
                         item = item.items,
                         timestamp = newTimestamp,
                         distributionquantity = item.distributionQuantity,
-                        location = selectedLocation
+                        location = selectedLocation,
+                        userId = userId
                     )
 
                     distributionDao.insertDistribution(distributionRecord)

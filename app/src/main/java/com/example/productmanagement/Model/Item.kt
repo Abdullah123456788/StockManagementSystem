@@ -10,5 +10,6 @@ data class Item(
     val items: String,
     var quantity: Int = 0,
     var distributionQuantity: Int,
-    var timestamp: Long = 0
+    var timestamp: Long = 0,
+    val userId: String
 )

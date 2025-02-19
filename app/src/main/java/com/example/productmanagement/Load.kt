@@ -14,6 +14,7 @@ import com.example.productmanagement.Adapter.ItemsAdapter
 import com.example.productmanagement.Model.Item
 import com.example.productmanagement.Model.ItemsDatabase
 import com.example.productmanagement.Model.Stock
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -77,6 +78,7 @@ class Load : AppCompatActivity() {
 
     private fun saveItemsToDatabase() {
         lifecycleScope.launch {
+            val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
             val dao = ItemsDatabase.getDatabase(applicationContext).itemsDao()
             val stockDao = ItemsDatabase.getDatabase(applicationContext).stockDao()
             val savedItems = mutableListOf<Item>()
@@ -89,7 +91,7 @@ class Load : AppCompatActivity() {
 
                 if (quantity > 0) {
                     val formattedTime = dateFormat.format(Date(System.currentTimeMillis()))
-                    val existingItem = dao.getItemByName(item.items)
+                    val existingItem = dao.getItemByName(item.items, userId = userId)
 
                     if (existingItem != null) {
                         existingItem.quantity += quantity
@@ -132,8 +134,9 @@ class Load : AppCompatActivity() {
 
     private fun loadItemsFromDatabase() {
         lifecycleScope.launch {
+            val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
             val dao = ItemsDatabase.getDatabase(applicationContext).itemsDao()
-            val allItems = dao.getAllItems()
+            val allItems = dao.getAllItems(userId = userId)
 
             Log.d("LoadActivity", "Loaded items: $allItems")
 
@@ -164,6 +167,7 @@ class Load : AppCompatActivity() {
     }
 
     private fun populateSpinner() {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
         val loadArray = resources.getStringArray(R.array.Load)
         val adapter = ArrayAdapter(this@Load, android.R.layout.simple_spinner_item, loadArray)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -176,25 +180,25 @@ class Load : AppCompatActivity() {
                 itemList.clear()
                 val newItems = when (selectedItem) {
                     "Islamabad I9" -> mutableListOf(
-                        Item(items = "Pepsi", distributionQuantity = 0, quantity = 0, timestamp = 0),
-                        Item(items = "Coke", distributionQuantity = 0,quantity = 0, timestamp = 0),
-                        Item(items = "Juice",distributionQuantity = 0, quantity = 0, timestamp = 0),
-                        Item(items = "Milk", distributionQuantity = 0,quantity = 0, timestamp = 0),
+                        Item(items = "Pepsi", distributionQuantity = 0, quantity = 0, timestamp = 0, userId = userId),
+                        Item(items = "Coke", distributionQuantity = 0,quantity = 0, timestamp = 0, userId = userId),
+                        Item(items = "Juice",distributionQuantity = 0, quantity = 0, timestamp = 0, userId = userId),
+                        Item(items = "Milk", distributionQuantity = 0,quantity = 0, timestamp = 0, userId = userId),
                     )
                     "Islamabad I10" -> mutableListOf(
-                        Item(items = "Flour",distributionQuantity = 0, quantity = 0, timestamp = 0),
-                        Item(items = "Rice",distributionQuantity = 0, quantity = 0, timestamp = 0),
-                        Item(items = "Beans",distributionQuantity = 0, quantity = 0, timestamp = 0)
+                        Item(items = "Flour",distributionQuantity = 0, quantity = 0, timestamp = 0, userId = userId),
+                        Item(items = "Rice",distributionQuantity = 0, quantity = 0, timestamp = 0, userId = userId),
+                        Item(items = "Beans",distributionQuantity = 0, quantity = 0, timestamp = 0, userId = userId)
                     )
                     "Karachi Port" -> mutableListOf(
-                        Item(items = "Mobiles", distributionQuantity = 0,quantity = 0, timestamp = 0),
-                        Item(items = "LCD", distributionQuantity = 0,quantity = 0, timestamp = 0),
-                        Item(items = "Imported Shirts",distributionQuantity = 0, quantity = 0, timestamp = 0)
+                        Item(items = "Mobiles", distributionQuantity = 0,quantity = 0, timestamp = 0, userId = userId),
+                        Item(items = "LCD", distributionQuantity = 0,quantity = 0, timestamp = 0, userId = userId),
+                        Item(items = "Imported Shirts",distributionQuantity = 0, quantity = 0, timestamp = 0, userId = userId)
                     )
                     "Lahore" -> mutableListOf(
-                        Item(items = "Clothes", distributionQuantity = 0,quantity = 0),
-                        Item(items = "Shorts",distributionQuantity = 0, quantity = 0),
-                        Item(items = "Pants", distributionQuantity = 0,quantity = 0)
+                        Item(items = "Clothes", distributionQuantity = 0,quantity = 0, userId = userId),
+                        Item(items = "Shorts",distributionQuantity = 0, quantity = 0, userId = userId),
+                        Item(items = "Pants", distributionQuantity = 0,quantity = 0, userId = userId)
                     )
                     else -> emptyList()
                 }

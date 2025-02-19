@@ -8,6 +8,7 @@ data class ExpenseItem(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val item: String,
     val amount: Int,
-    val timestamp: Long = System.currentTimeMillis()
+    val timestamp: Long = System.currentTimeMillis(),
+    val userId: String
 )
 

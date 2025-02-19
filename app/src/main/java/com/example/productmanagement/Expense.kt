@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.productmanagement.Adapter.ExpenseAdapter
 import com.example.productmanagement.Model.ExpenseDatabase
 import com.example.productmanagement.Model.ExpenseItem
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -81,7 +82,9 @@ class Expense : AppCompatActivity() {
 
             if (selectedItem != null && enteredAmount > 0) {
                 val currentTime = System.currentTimeMillis()
-                val newExpense = ExpenseItem(item = selectedItem!!, amount = enteredAmount, timestamp = currentTime)
+                val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+
+                val newExpense = ExpenseItem(item = selectedItem!!, amount = enteredAmount, timestamp = currentTime, userId = userId)
 
                 expenseList.add(newExpense)
                 expenseAdapter.notifyDataSetChanged()
@@ -111,7 +114,8 @@ class Expense : AppCompatActivity() {
 
         btndelete.setOnClickListener {
             lifecycleScope.launch(Dispatchers.IO) {
-                database.expenseDao().deleteAllExpenses()
+                val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+                database.expenseDao().deleteAllExpenses(userId)
                 withContext(Dispatchers.Main) {
                     expenseList.clear()
                     expenseAdapter.notifyDataSetChanged()
