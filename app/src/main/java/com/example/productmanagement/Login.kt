@@ -63,7 +63,7 @@ class Login : AppCompatActivity() {
                 if (task.isSuccessful) {
                     navigateToMainActivity()
                 } else {
-                    Toast.makeText(this, "Authentication failed.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Invalid Email Or Password", Toast.LENGTH_SHORT).show()
                 }
             }
             .addOnFailureListener {
