@@ -89,14 +89,22 @@ class Load : AppCompatActivity() {
             val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
 
             lifecycleScope.launch {
+                val db = ItemsDatabase.getDatabase(applicationContext)
                 val locations = listOf(
-                    Location(1, "Islamabad I9"),
-                    Location(2, "Islamabad I10"),
-                    Location(3, "Karachi Port"),
-                    Location(4, "Lahore")
+                    Location(name = "Islamabad I9"),
+                    Location(name = "Islamabad I10"),
+                    Location(name = "Karachi Port"),
+                    Location(name = "Lahore")
                 )
-                    LocationDao.insertLocation(locations)
+
+                for (location in locations) {
+                    val existingLocation = db.locationDao().getLocationByName(location.name)
+                    if (existingLocation == null) {
+                        db.locationDao().insertLocation(location)
+                    }
+                }
             }
+
 
             selectedlocation = spinner.selectedItem?.toString() ?: ""
 

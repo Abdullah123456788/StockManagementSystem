@@ -43,10 +43,17 @@ class CreateAccount : AppCompatActivity() {
             val nameText = name.text.toString().trim()
             val passwordText = password.text.toString().trim()
             val confirmPasswordText = confirmPassword.text.toString().trim()
+
             if (emailText.isNotEmpty() && nameText.isNotEmpty() && passwordText.isNotEmpty() && confirmPasswordText.isNotEmpty()) {
                 if (passwordText == confirmPasswordText) {
-                    progressBar.visibility=View.VISIBLE
-                    registerUser(nameText, emailText, passwordText)
+                    isEmailRegistered(emailText) { isRegistered ->
+                        if (isRegistered) {
+                            Toast.makeText(this, "Email already exists", Toast.LENGTH_SHORT).show()
+                        } else {
+                            progressBar.visibility = View.VISIBLE
+                            registerUser(nameText, emailText, passwordText)
+                        }
+                    }
                 } else {
                     Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show()
                 }
@@ -55,11 +62,24 @@ class CreateAccount : AppCompatActivity() {
             }
         }
 
+
         alreadyAccount.setOnClickListener {
             startActivity(Intent(this, Login::class.java))
             finish()
         }
     }
+    private fun isEmailRegistered(email: String, callback: (Boolean) -> Unit) {
+        auth.fetchSignInMethodsForEmail(email)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val signInMethods = task.result?.signInMethods
+                    callback(signInMethods?.isNotEmpty() == true)
+                } else {
+                    callback(false)
+                }
+            }
+    }
+
 
     private fun registerUser(name: String, email: String, password: String) {
         auth.createUserWithEmailAndPassword(email, password)
