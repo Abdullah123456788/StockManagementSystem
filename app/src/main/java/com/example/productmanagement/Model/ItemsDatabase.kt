@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
 
-@Database(entities = [Item::class,DistributeRecordItems::class,Stock::class], version = 1, exportSchema = false)
+@Database(entities = [Item::class,DistributeRecordItems::class,Stock::class,Location::class], version = 1, exportSchema = false)
 @TypeConverters(Converter::class)
 
 abstract class ItemsDatabase : RoomDatabase() {
@@ -15,6 +15,7 @@ abstract class ItemsDatabase : RoomDatabase() {
     abstract fun itemsDao():ItemsDao
     abstract fun DistributionDao(): DistributionDao
     abstract fun stockDao(): StockDao
+    abstract fun locationDao(): LocationDao
 
     companion object {
         @Volatile

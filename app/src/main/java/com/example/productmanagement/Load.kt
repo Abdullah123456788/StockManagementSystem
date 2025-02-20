@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.productmanagement.Adapter.ItemsAdapter
 import com.example.productmanagement.Model.Item
 import com.example.productmanagement.Model.ItemsDatabase
+import com.example.productmanagement.Model.Location
 import com.example.productmanagement.Model.Stock
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
@@ -67,6 +68,8 @@ class Load : AppCompatActivity() {
             loadItemsFromDatabase()
         }
 
+
+
         updateTimeAndDate()
         populateSpinner()
     }
@@ -81,8 +84,19 @@ class Load : AppCompatActivity() {
             val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
             val dao = ItemsDatabase.getDatabase(applicationContext).itemsDao()
             val stockDao = ItemsDatabase.getDatabase(applicationContext).stockDao()
+            val LocationDao = ItemsDatabase.getDatabase(applicationContext).locationDao()
             val savedItems = mutableListOf<Item>()
             val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+
+            lifecycleScope.launch {
+                val locations = listOf(
+                    Location(1, "Islamabad I9"),
+                    Location(2, "Islamabad I10"),
+                    Location(3, "Karachi Port"),
+                    Location(4, "Lahore")
+                )
+                    LocationDao.insertLocation(locations)
+            }
 
             selectedlocation = spinner.selectedItem?.toString() ?: ""
 
@@ -165,6 +179,7 @@ class Load : AppCompatActivity() {
             }
         })
     }
+
 
     private fun populateSpinner() {
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""

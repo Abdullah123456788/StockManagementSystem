@@ -18,7 +18,6 @@ abstract class AppDatabase : RoomDatabase() {
         private var INSTANCE: AppDatabase? = null
         val MIGRATION_1_2 = object : Migration(1, 2) {
             override fun migrate(database: SupportSQLiteDatabase) {
-                // Creating the users table with the correct schema
                 database.execSQL("""
             CREATE TABLE IF NOT EXISTS `users` (
                 `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
@@ -38,8 +37,8 @@ abstract class AppDatabase : RoomDatabase() {
                     DATABASE_NAME
                 )
 
-                    .addMigrations(MIGRATION_1_2) // Add migration here
-                    .fallbackToDestructiveMigration() // Optional, you can keep this to delete the database if migration fails
+                    .addMigrations(MIGRATION_1_2)
+                    .fallbackToDestructiveMigration()
                     .build()
                 INSTANCE = instance
                 instance

@@ -18,6 +18,8 @@ import com.example.productmanagement.Model.ExpenseItem
 import com.example.productmanagement.Model.Item
 import com.example.productmanagement.Model.ItemsDao
 import com.example.productmanagement.Model.ItemsDatabase
+import com.example.productmanagement.Model.Location
+import com.example.productmanagement.Model.LocationDao
 import com.example.productmanagement.Model.Stock
 import com.example.productmanagement.Model.StockDao
 import com.google.firebase.FirebaseApp
@@ -42,6 +44,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var itemdao: ItemsDao
     private lateinit var expensedao: ExpenseDao
     private lateinit var stockdao: StockDao
+    private lateinit var locationDao: LocationDao
     private lateinit var firebaseHelper: FirebaseHelper
 
 
@@ -67,6 +70,7 @@ class MainActivity : AppCompatActivity() {
         itemdao = database.itemsDao()
         expensedao = database2.expenseDao()
         stockdao = database.stockDao()
+        locationDao = database.locationDao()
         distributionDao = database.DistributionDao()
         firebaseHelper = FirebaseHelper()
         auth = FirebaseAuth.getInstance()
@@ -121,6 +125,7 @@ class MainActivity : AppCompatActivity() {
                 val itemsList: List<Item> = itemdao.getAllItems(userId)
                 val expenseList: List<ExpenseItem> = expensedao.getAllExpenses(userId)
                 val stockList: List<Stock> = stockdao.getAllStock()
+                val Location: List<Location> = locationDao.getAllLocations()
 
                 withContext(Dispatchers.Main) {
                     if (distributionList.isNotEmpty()) {
@@ -140,6 +145,16 @@ class MainActivity : AppCompatActivity() {
                             ).show()
                         }
                     }
+
+                    if (Location.isNotEmpty()) {
+                        firebaseHelper.uploadLocationtodb(Location) { success ->
+                            Toast.makeText(applicationContext,
+                                if (success) "Location synced!" else "Location sync failed!",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+
 
                     if (expenseList.isNotEmpty()) {
                         firebaseHelper.uploadExpensesToFirebase(expenseList) { success ->

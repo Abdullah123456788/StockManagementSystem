@@ -53,6 +53,8 @@ class Login : AppCompatActivity() {
 
         btnCreateAccount.setOnClickListener {
             startActivity(Intent(this, CreateAccount::class.java))
+            finish()
+
         }
     }
 
