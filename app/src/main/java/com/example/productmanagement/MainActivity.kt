@@ -125,7 +125,7 @@ class MainActivity : AppCompatActivity() {
                 val itemsList: List<Item> = itemdao.getAllItems(userId)
                 val expenseList: List<ExpenseItem> = expensedao.getAllExpenses(userId)
                 val stockList: List<Stock> = stockdao.getAllStock()
-                val Location: List<Location> = locationDao.getAllLocations()
+//                val Location: List<Location> = locationDao.getAllLocations()
 
                 withContext(Dispatchers.Main) {
                     if (distributionList.isNotEmpty()) {
@@ -146,14 +146,14 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
 
-                    if (Location.isNotEmpty()) {
-                        firebaseHelper.uploadLocationtodb(Location) { success ->
-                            Toast.makeText(applicationContext,
-                                if (success) "Location synced!" else "Location sync failed!",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    }
+//                    if (Location.isNotEmpty()) {
+//                        firebaseHelper.uploadLocationtodb(Location) { success ->
+//                            Toast.makeText(applicationContext,
+//                                if (success) "Location synced!" else "Location sync failed!",
+//                                Toast.LENGTH_SHORT
+//                            ).show()
+//                        }
+//                    }
 
 
                     if (expenseList.isNotEmpty()) {

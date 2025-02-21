@@ -15,7 +15,13 @@ import com.example.productmanagement.Model.Item
 import com.example.productmanagement.Model.ItemsDatabase
 import com.example.productmanagement.Model.Location
 import com.example.productmanagement.Model.Stock
+import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -37,6 +43,8 @@ class Load : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar?.title = "Load"
+
+        fetchAllDataFromFirebase()
 
         setContentView(R.layout.activity_load)
         time = findViewById(R.id.time)
@@ -73,6 +81,25 @@ class Load : AppCompatActivity() {
         updateTimeAndDate()
         populateSpinner()
     }
+
+    private val locationItemsMap = mutableMapOf<String, List<String>>()
+
+    private fun fetchAllDataFromFirebase() {
+        val database = FirebaseFirestore.getInstance().collection("Location")
+
+        database.get().addOnSuccessListener { documents ->
+            for (document in documents) {
+                val locationName = document.getString("name") ?: continue
+                val items = document.get("items") as? List<String> ?: emptyList()
+                locationItemsMap[locationName] = items
+            }
+            Log.d("FirebaseData", "All locations & items loaded successfully")
+        }.addOnFailureListener { exception ->
+            Log.e("FirebaseError", "Error fetching locations: ${exception.message}")
+        }
+    }
+
+
     private fun updateTotalQuantity() {
         val totalQuantity = itemList.sumOf { it.quantity ?: 0 }
         editText.setText(totalQuantity.toString())
@@ -187,6 +214,11 @@ class Load : AppCompatActivity() {
             }
         })
     }
+//    private fun getnames()
+//    {
+//        val database = FirebaseFirestore.getInstance().collection("Location")
+//        database.whereEqualTo("name", selectedItem).get()
+//    }
 
 
     private fun populateSpinner() {
@@ -197,51 +229,26 @@ class Load : AppCompatActivity() {
         spinner.adapter = adapter
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
 
-            override fun onItemSelected(parent: AdapterView<*>?, view: android.view.View?, position: Int, id: Long) {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val selectedItem = parent?.getItemAtPosition(position).toString()
                 Toast.makeText(this@Load, "Selected: $selectedItem", Toast.LENGTH_SHORT).show()
+
                 itemList.clear()
-                val newItems = when (selectedItem) {
-                    "Islamabad I9" -> mutableListOf(
-                        Item(items = "Pepsi", distributionQuantity = 0, quantity = 0, timestamp = 0, userId = userId),
-                        Item(items = "Coke", distributionQuantity = 0,quantity = 0, timestamp = 0, userId = userId),
-                        Item(items = "Juice",distributionQuantity = 0, quantity = 0, timestamp = 0, userId = userId),
-                        Item(items = "Milk", distributionQuantity = 0,quantity = 0, timestamp = 0, userId = userId),
-                    )
-                    "Islamabad I10" -> mutableListOf(
-                        Item(items = "Flour",distributionQuantity = 0, quantity = 0, timestamp = 0, userId = userId),
-                        Item(items = "Rice",distributionQuantity = 0, quantity = 0, timestamp = 0, userId = userId),
-                        Item(items = "Beans",distributionQuantity = 0, quantity = 0, timestamp = 0, userId = userId)
-                    )
-                    "Karachi Port" -> mutableListOf(
-                        Item(items = "Mobiles", distributionQuantity = 0,quantity = 0, timestamp = 0, userId = userId),
-                        Item(items = "LCD", distributionQuantity = 0,quantity = 0, timestamp = 0, userId = userId),
-                        Item(items = "Imported Shirts",distributionQuantity = 0, quantity = 0, timestamp = 0, userId = userId)
-                    )
-                    "Lahore" -> mutableListOf(
-                        Item(items = "Clothes", distributionQuantity = 0,quantity = 0, userId = userId),
-                        Item(items = "Shorts",distributionQuantity = 0, quantity = 0, userId = userId),
-                        Item(items = "Pants", distributionQuantity = 0,quantity = 0, userId = userId)
-                    )
-                    else -> emptyList()
+
+                val items = locationItemsMap[selectedItem] ?: emptyList()
+
+                val newItems = items.map { itemName ->
+                    Item(items = itemName, distributionQuantity = 0, quantity = 0, timestamp = 0, userId = userId)
                 }
 
-                for (newItem in newItems) {
-                    val existingItem = itemList.find { it.items == newItem.items }
-
-                    if (existingItem != null) {
-                        existingItem.quantity += newItem.quantity
-                        existingItem.timestamp = System.currentTimeMillis()
-
-                    } else {
-                        itemList.add(newItem)
-                    }
-                }
+                itemList.addAll(newItems)
                 recyclerView.adapter?.notifyDataSetChanged()
                 updateTotalQuantity()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
+
         }
+
     }
 }
