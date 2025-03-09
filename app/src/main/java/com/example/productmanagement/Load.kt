@@ -15,12 +15,7 @@ import com.example.productmanagement.Model.Item
 import com.example.productmanagement.Model.ItemsDatabase
 import com.example.productmanagement.Model.Location
 import com.example.productmanagement.Model.Stock
-import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -43,10 +38,20 @@ class Load : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar?.title = "Load"
+        setContentView(R.layout.activity_load
+        )
+//        val inflater = layoutInflater
+//        val layout = inflater.inflate(R.layout.customtoast, findViewById(R.id.toast))
+//
+//        // Create and show the custom toast
+//        val toast = Toast(applicationContext)
+//        toast.duration = Toast.LENGTH_SHORT
+//        toast.view = layout
+//        toast.show()
 
         fetchAllDataFromFirebase()
 
-        setContentView(R.layout.activity_load)
+
         time = findViewById(R.id.time)
         ampm = findViewById(R.id.ampm)
         date = findViewById(R.id.date)
@@ -84,20 +89,49 @@ class Load : AppCompatActivity() {
 
     private val locationItemsMap = mutableMapOf<String, List<String>>()
 
+//    private fun fetchAllDataFromFirebase() {
+//        val database = FirebaseFirestore.getInstance().collection("Location")
+//
+//        database.get().addOnSuccessListener { documents ->
+//            for (document in documents) {
+//                val locationName = document.getString("name") ?: continue
+//                val items = document.get("items") as? List<String> ?: emptyList()
+//                locationItemsMap[locationName] = items
+//            }
+//            Log.d("FirebaseData", "All locations & items loaded successfully")
+//        }.addOnFailureListener { exception ->
+//            Log.e("FirebaseError", "Error fetching locations: ${exception.message}")
+//        }
+//    }
+
     private fun fetchAllDataFromFirebase() {
         val database = FirebaseFirestore.getInstance().collection("Location")
 
         database.get().addOnSuccessListener { documents ->
+            val locationsList = mutableListOf<String>()
+
             for (document in documents) {
                 val locationName = document.getString("name") ?: continue
                 val items = document.get("items") as? List<String> ?: emptyList()
+
                 locationItemsMap[locationName] = items
+                locationsList.add(locationName)
             }
+
             Log.d("FirebaseData", "All locations & items loaded successfully")
+
+            updateSpinner(locationsList)
+
         }.addOnFailureListener { exception ->
             Log.e("FirebaseError", "Error fetching locations: ${exception.message}")
         }
     }
+    private fun updateSpinner(locationsList: List<String>) {
+        val adapter = ArrayAdapter(this@Load, android.R.layout.simple_spinner_item, locationsList)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinner.adapter = adapter
+    }
+
 
 
     private fun updateTotalQuantity() {

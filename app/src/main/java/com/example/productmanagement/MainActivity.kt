@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -18,7 +19,6 @@ import com.example.productmanagement.Model.ExpenseItem
 import com.example.productmanagement.Model.Item
 import com.example.productmanagement.Model.ItemsDao
 import com.example.productmanagement.Model.ItemsDatabase
-import com.example.productmanagement.Model.Location
 import com.example.productmanagement.Model.LocationDao
 import com.example.productmanagement.Model.Stock
 import com.example.productmanagement.Model.StockDao
@@ -38,6 +38,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var distributiondb:Button
     private lateinit var sync:Button
     private lateinit var logout:Button
+    private lateinit var test:Button
     private lateinit var database: ItemsDatabase
     private lateinit var database2: ExpenseDatabase
     private lateinit var distributionDao: DistributionDao
@@ -63,6 +64,8 @@ class MainActivity : AppCompatActivity() {
         storage=findViewById(R.id.Storage)
         distributiondb=findViewById(R.id.distributionrecord)
         sync=findViewById(R.id.Sync)
+        test=findViewById(R.id.Test)
+
         logout=findViewById(R.id.logout)
         database = ItemsDatabase.getDatabase(applicationContext)
         database2 = ExpenseDatabase.getDatabase(applicationContext)
@@ -77,6 +80,8 @@ class MainActivity : AppCompatActivity() {
         FirebaseApp.initializeApp(this)
 
 
+        test.visibility=View.GONE
+
         if (auth.currentUser == null) {
             navigateToLogin()
             return
@@ -90,7 +95,11 @@ class MainActivity : AppCompatActivity() {
             auth.signOut()
             navigateToLogin()
         }
-
+        test.setOnClickListener{
+            val intent=Intent(this, Test::class.java)
+            startActivity(intent)
+        }
+            test.visibility=View.VISIBLE
 
         distribution.setOnClickListener{
             val intent=Intent(this,Distribution::class.java)
