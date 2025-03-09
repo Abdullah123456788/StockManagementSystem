@@ -40,14 +40,6 @@ class Load : AppCompatActivity() {
         supportActionBar?.title = "Load"
         setContentView(R.layout.activity_load
         )
-//        val inflater = layoutInflater
-//        val layout = inflater.inflate(R.layout.customtoast, findViewById(R.id.toast))
-//
-//        // Create and show the custom toast
-//        val toast = Toast(applicationContext)
-//        toast.duration = Toast.LENGTH_SHORT
-//        toast.view = layout
-//        toast.show()
 
         fetchAllDataFromFirebase()
 
@@ -88,21 +80,6 @@ class Load : AppCompatActivity() {
     }
 
     private val locationItemsMap = mutableMapOf<String, List<String>>()
-
-//    private fun fetchAllDataFromFirebase() {
-//        val database = FirebaseFirestore.getInstance().collection("Location")
-//
-//        database.get().addOnSuccessListener { documents ->
-//            for (document in documents) {
-//                val locationName = document.getString("name") ?: continue
-//                val items = document.get("items") as? List<String> ?: emptyList()
-//                locationItemsMap[locationName] = items
-//            }
-//            Log.d("FirebaseData", "All locations & items loaded successfully")
-//        }.addOnFailureListener { exception ->
-//            Log.e("FirebaseError", "Error fetching locations: ${exception.message}")
-//        }
-//    }
 
     private fun fetchAllDataFromFirebase() {
         val database = FirebaseFirestore.getInstance().collection("Location")

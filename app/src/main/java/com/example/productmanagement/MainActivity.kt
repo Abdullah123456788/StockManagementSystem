@@ -80,7 +80,6 @@ class MainActivity : AppCompatActivity() {
         FirebaseApp.initializeApp(this)
 
 
-        test.visibility=View.GONE
 
         if (auth.currentUser == null) {
             navigateToLogin()
@@ -99,7 +98,7 @@ class MainActivity : AppCompatActivity() {
             val intent=Intent(this, Test::class.java)
             startActivity(intent)
         }
-            test.visibility=View.VISIBLE
+            test.visibility=View.GONE
 
         distribution.setOnClickListener{
             val intent=Intent(this,Distribution::class.java)
